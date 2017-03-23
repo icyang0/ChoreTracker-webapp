@@ -1,0 +1,73 @@
+extends layout
+
+block content
+  div(class="container")
+    div(class="header")
+      ul(class="nav nav-pills pull-right")
+        li(class="active")
+          a(href="#") Home
+        li
+          a(href="#") About
+      h3(class="text-muted") Chore Tracker
+    div(id="signupSuccess", class="alert alert-success", style="display:none")
+      p(id="signupSuccessText") Thanks for submitting and supporting!
+    div(id="signupDuplicate", class="alert alert-success", style="display:none")
+      p(id="signupDuplicateText") This Chore Name is already on the list, but may not have been implemented yet.
+    div(id="signupError", class="alert alert-info", style="display:none")
+      p(id="signupErrorText") Well this is embarrassing. It looks like we're having trouble submitting.
+    div(class="jumbotron")
+      h1 Chore Tracker Alexa Skill
+      p(class="lead") Have a request for a chore name to be added? Just fill it in and let our lovely developer know to add it into the next code roll-out! :)
+      p
+        a(class="btn btn-lg btn-success", data-toggle="modal", href="#signupModal") Click Here to Add Chore
+    
+    div(class="footer")
+      p &copy; Chore Tracker 2017
+      
+    // Modal
+    div(class="modal fade", id="signupModal", tabindex="-1", role="dialog", aria-labelledby="signupModal", aria-hidden="true")
+      div(class="modal-dialog")
+        div(class="modal-content")
+          div(class="modal-header")
+            button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+            h4(class="modal-title") Type in the name of the chore you want to add to the database. It's completely anonymous!
+          div(class="modal-body")
+            form(id="signupForm", role="form")
+              input(type="hidden", id="theme", name="theme", value="flatly")
+              div(class="form-group")
+                label(for="name") Name
+                input(type="text", class="form-control", id="name", name="name", placeholder="Your name")
+              div(class="form-group")
+                label(for="choreName") Chore Name
+                input(type="choreName", class="form-control", id="choreName", name="choreName", placeholder="ex: washed the car")
+              div(class="form-group")
+                label(for="previewAccess") Interested in Preview Access?
+                select(class="form-control", name="previewAccess")
+                  option Yes
+                  option No
+          div(class="modal-footer")
+            button(id="signup", type="button", class="btn btn-primary") Sign Up!
+  script(src="../static/jquery/jquery.js")
+  script(src="../static/bootstrap/js/bootstrap.min.js")
+  script.
+    $(document).ready(function() {
+      $("#signup").click(function() {
+        $.post( "/signup", $("#signupForm").serialize(),
+                function(data) {
+                  $("#signupSuccess").show();
+                }
+              )
+              .error(function(xhr) {
+                switch(xhr.status) {
+                  case 409:
+                    $("#signupDuplicate").show();
+                    break;
+                  default:
+                    $("#signupError").show();
+                }
+              })
+              .always(function() {
+                $("#signupModal").modal('hide');
+              });
+      })
+    })
