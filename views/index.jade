@@ -35,16 +35,8 @@ block content
             form(id="signupForm", role="form")
               input(type="hidden", id="theme", name="theme", value="flatly")
               div(class="form-group")
-                label(for="name") Name
-                input(type="text", class="form-control", id="name", name="name", placeholder="Your name")
-              div(class="form-group")
                 label(for="choreName") Chore Name
                 input(type="choreName", class="form-control", id="choreName", name="choreName", placeholder="ex: washed the car")
-              div(class="form-group")
-                label(for="previewAccess") Interested in Preview Access?
-                select(class="form-control", name="previewAccess")
-                  option Yes
-                  option No
           div(class="modal-footer")
             button(id="signup", type="button", class="btn btn-primary") Sign Up!
   script(src="../static/jquery/jquery.js")

@@ -44,21 +44,17 @@ app.get('/', routes.index);
 
 //POST signup form.
 app.post('/signup', function(req, res) {
-  var nameField = req.body.name,
-      choreField = req.body.choreName,
-      previewBool = req.body.previewAccess;
+  var choreField = req.body.choreName;
   res.send(200);
-  signup(nameField, choreField, previewBool);
+  signup(choreField);
 });
 
 //Add signup form data to database.
-var signup = function (nameSubmitted, choreSubmitted, previewPreference) {
+var signup = function (choreSubmitted) {
   var formData = {
     TableName: config.STARTUP_SIGNUP_TABLE,
     Item: {
-      choreName: {'S': choreSubmitted}, 
-      name: {'S': nameSubmitted},
-      preview: {'S': previewPreference}
+      choreName: {'S': choreSubmitted}
     }
   };
   db.putItem(formData, function(err, data) {
@@ -66,8 +62,8 @@ var signup = function (nameSubmitted, choreSubmitted, previewPreference) {
       console.log('Error adding item to database: ', err);
     } else {
       console.log('Form data added to database.');
-      var snsMessage = 'New signup: %EMAIL%'; //Send SNS notification containing email from form.
-      snsMessage = snsMessage.replace('%EMAIL%', formData.Item.choreName['S']);
+      var snsMessage = 'New chore requested: %CHORE%'; //Send SNS notification containing email from form.
+      snsMessage = snsMessage.replace('%CHORE%', formData.Item.choreName['S']);
       sns.publish({ TopicArn: config.NEW_SIGNUP_TOPIC, Message: snsMessage }, function(err, data) {
         if (err) {
           console.log('Error publishing SNS message: ' + err);
