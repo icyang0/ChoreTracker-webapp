@@ -49,6 +49,8 @@ app.post('/signup', function(req, res) {
   signup(choreField);
 });
 
+
+//find out how many entries are in the database, and only send out a msg if there's 3 or more
 //Add signup form data to database.
 var signup = function (choreSubmitted) {
   var formData = {
